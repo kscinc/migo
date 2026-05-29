@@ -66,7 +66,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],         // inline styles in HTML
       imgSrc: ["'self'", "data:", "https:"],
       fontSrc: ["'self'", "https:", "data:"],
-      frameSrc: ["https://cdn.plaid.com"]              // Plaid Link iframe
+      frameSrc: ["https://cdn.plaid.com", "https://www.youtube.com", "https://youtube.com"]
     }
   }
 }));

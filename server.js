@@ -27,6 +27,20 @@ process.on('uncaughtException', (err) => {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ─── Health check (BEFORE all middleware so Railway's probe always gets a 200) ─
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Migo Backend is running! 🚀',
+    port: PORT,
+    features: {
+      plaid: 'Connected',
+      notifications: 'Enabled',
+      cronJobs: 'Active'
+    }
+  });
+});
+
 // ─── Security headers ────────────────────────────────────────────────────────
 app.use(helmet({
   contentSecurityPolicy: {
@@ -120,17 +134,7 @@ app.use(express.static(path.join(__dirname, 'client', 'dist')));
 app.use('/api/plaid', plaidRoutes);
 app.use('/api/comprehension', comprehensionRoutes);
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({
-    message: 'Migo Backend is running! 🚀',
-    features: {
-      plaid: 'Connected',
-      notifications: 'Enabled',
-      cronJobs: 'Active'
-    }
-  });
-});
+// (Health check is registered above, before middleware)
 
 // Serve React app for all non-API routes (SPA fallback)
 app.get('/{*splat}', (req, res, next) => {

@@ -27,6 +27,10 @@ process.on('uncaughtException', (err) => {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ─── Trust proxy (Railway runs behind a reverse proxy) ──────────────────────
+// Required for express-rate-limit to read the real client IP from X-Forwarded-For
+app.set('trust proxy', 1);
+
 // ─── Health check (BEFORE all middleware so Railway's probe always gets a 200) ─
 app.get('/health', (req, res) => {
   res.status(200).json({

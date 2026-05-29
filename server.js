@@ -15,6 +15,15 @@ const verifyJWT = require('./src/middleware/auth');
 const { validate } = require('./src/middleware/validate');
 const { levelPlacementSchema } = require('./src/config/schemas');
 
+// ─── Crash handlers (so Railway logs show WHY a process dies) ────────────────
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('‼️  Unhandled Rejection:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('‼️  Uncaught Exception:', err);
+  process.exit(1);
+});
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -188,7 +197,7 @@ async function fetchUserPlaidData(userId) {
 
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('✅ Migo Backend Started');
   console.log(`✅ Server: http://localhost:${PORT}`);
